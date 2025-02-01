@@ -14,7 +14,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
     AppComponent,
     WorkoutFormComponent,
     WorkoutChartComponent,
-    UserWorkoutComponent
+    UserWorkoutComponent,
   ],
   imports: [
     BrowserModule,

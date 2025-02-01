@@ -8,4 +8,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'health-tracker-app';
+  selectedTab: string = 'user-form'; // Default tab
+
+  selectTab(tab: string) {
+    this.selectedTab = tab;
+  }
 }
