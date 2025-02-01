@@ -7,14 +7,14 @@ interface UserWorkout {
   name: string;
   workouts: string[];
   totalMinutes: number;
-  createdAt: string; // new field for created timestamp
+  createdAt: string;
 }
 
 @Component({
   selector: 'app-user-workout',
   templateUrl: './user-workout.component.html',
   styleUrls: ['./user-workout.component.css'],
-  standalone: false
+  standalone: false,
 })
 export class UserWorkoutComponent implements OnInit, OnDestroy {
   searchControl = new FormControl('');
@@ -25,17 +25,17 @@ export class UserWorkoutComponent implements OnInit, OnDestroy {
   allWorkouts: UserWorkout[] = [];
   workoutTypes = ['all', 'Running', 'Cycling', 'Yoga', 'Swimming'];
 
-  private subscription!: Subscription;
+  public subscription!: Subscription;
 
   constructor(private workoutService: WorkoutService) {}
 
   ngOnInit() {
-    // Load workouts from localStorage
+
     const savedWorkouts = localStorage.getItem('userWorkouts');
     if (savedWorkouts) {
       this.allWorkouts = JSON.parse(savedWorkouts);
-      // Add createdAt if missing in old entries
-      this.allWorkouts.forEach(workout => {
+
+      this.allWorkouts.forEach((workout) => {
         if (!workout.createdAt) {
           workout.createdAt = new Date().toISOString();
         }
@@ -43,23 +43,26 @@ export class UserWorkoutComponent implements OnInit, OnDestroy {
       this.sortWorkoutsByDate();
     }
 
-    this.subscription = this.workoutService.workouts$.subscribe(rawWorkouts => {
+    this.subscription = this.workoutService.workouts$.subscribe((rawWorkouts) => {
       if (rawWorkouts) {
         try {
           const userWorkoutMap: { [key: string]: UserWorkout } = {};
 
           rawWorkouts.forEach((workout: any) => {
-            const { userName, workoutType, workoutMinutes, createdAt } = workout;
+
+            const createdAt = workout.createdAt || new Date().toISOString();
+
+            const { userName, workoutType, workoutMinutes } = workout;
 
             if (!userWorkoutMap[userName]) {
               userWorkoutMap[userName] = {
                 name: userName,
                 workouts: [],
                 totalMinutes: 0,
-                createdAt: createdAt, // Use the workout's createdAt
+                createdAt: createdAt,
               };
             } else {
-              // Update to keep the earliest createdAt
+
               const existingDate = new Date(userWorkoutMap[userName].createdAt);
               const newDate = new Date(createdAt);
               if (newDate < existingDate) {
@@ -74,7 +77,6 @@ export class UserWorkoutComponent implements OnInit, OnDestroy {
           this.allWorkouts = Object.values(userWorkoutMap);
           this.sortWorkoutsByDate();
         } catch (error) {
-          console.error('Error transforming workout data:', error);
         }
       } else {
         this.allWorkouts = [];
@@ -83,18 +85,18 @@ export class UserWorkoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // Unsubscribe to prevent memory leaks
+
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
   }
 
-  // Method to sort workouts by createdAt in descending order
-  private sortWorkoutsByDate() {
+
+  public sortWorkoutsByDate() {
     this.allWorkouts.sort((a, b) => {
       const dateA = new Date(a.createdAt);
       const dateB = new Date(b.createdAt);
-      return dateB.getTime() - dateA.getTime(); // Sort descending (latest first)
+      return dateB.getTime() - dateA.getTime();
     });
   }
 
@@ -102,17 +104,17 @@ export class UserWorkoutComponent implements OnInit, OnDestroy {
     const searchTerm = this.searchControl.value?.toLowerCase() || '';
     const selectedType = this.workoutTypeControl.value || 'all';
 
-    const filtered = this.allWorkouts.filter(user => {
+    const filtered = this.allWorkouts.filter((user) => {
       const matchesSearch = user.name.toLowerCase().includes(searchTerm);
       const matchesType = selectedType === 'all' || user.workouts.includes(selectedType);
       return matchesSearch && matchesType;
     });
 
-    // Sort the filtered workouts by createdAt in descending order
+
     filtered.sort((a, b) => {
       const dateA = new Date(a.createdAt);
       const dateB = new Date(b.createdAt);
-      return dateB.getTime() - dateA.getTime(); // Sort descending (latest first)
+      return dateB.getTime() - dateA.getTime();
     });
 
     return filtered;
@@ -145,7 +147,7 @@ export class UserWorkoutComponent implements OnInit, OnDestroy {
     };
 
     this.workoutService.addWorkout(newWorkout);
-    this.allWorkouts.push(newWorkout); // Add to the end
-    this.sortWorkoutsByDate(); // Re-sort to maintain order
+    this.allWorkouts.push(newWorkout);
+    this.sortWorkoutsByDate();
   }
 }

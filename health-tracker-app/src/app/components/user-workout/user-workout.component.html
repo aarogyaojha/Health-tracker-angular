@@ -11,7 +11,7 @@
       />
     </div>
 
-
+    <!-- Workout Type Filter -->
     <div>
       <select
         [formControl]="workoutTypeControl"
@@ -24,7 +24,7 @@
     </div>
   </div>
 
-
+  <!-- Workout Table -->
   <table class="w-full text-sm text-left text-gray-600">
     <thead>
       <tr class="bg-blue-50 text-gray-700 uppercase">
@@ -51,6 +51,7 @@
 
 
   <div class="flex justify-between items-center mt-6">
+
     <div class="flex gap-2">
       <button
         (click)="changePage(currentPage - 1)"
