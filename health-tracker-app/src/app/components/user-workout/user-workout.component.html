@@ -1,1 +1,99 @@
-<p>user-workout works!</p>
+<div class="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
+  <!-- Controls -->
+  <div class="flex flex-wrap gap-4 mb-8">
+    <!-- Search Input -->
+    <div class="flex-1">
+      <input
+        type="text"
+        [formControl]="searchControl"
+        placeholder="Search by name"
+        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+
+
+    <div>
+      <select
+        [formControl]="workoutTypeControl"
+        class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        <option *ngFor="let type of workoutTypes" [value]="type">
+          {{ type | titlecase }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+
+  <table class="w-full text-sm text-left text-gray-600">
+    <thead>
+      <tr class="bg-blue-50 text-gray-700 uppercase">
+        <th class="px-6 py-3 border-b">Name</th>
+        <th class="px-6 py-3 border-b">Workouts</th>
+        <th class="px-6 py-3 border-b">Number of Workouts</th>
+        <th class="px-6 py-3 border-b">Total Minutes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of paginatedWorkouts" class="hover:bg-blue-50">
+        <td class="px-6 py-4 border-b">{{ user.name }}</td>
+        <td class="px-6 py-4 border-b">{{ user.workouts.join(', ') }}</td>
+        <td class="px-6 py-4 border-b">{{ user.workouts.length }}</td>
+        <td class="px-6 py-4 border-b">{{ user.totalMinutes }}</td>
+      </tr>
+      <tr *ngIf="paginatedWorkouts.length === 0">
+        <td colspan="4" class="px-6 py-4 text-center text-gray-500 border-b">
+          No results found
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <div class="flex justify-between items-center mt-6">
+
+    <div class="flex gap-2">
+      <button
+        (click)="changePage(currentPage - 1)"
+        [disabled]="currentPage === 1"
+        class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 border border-gray-300 rounded-lg hover:bg-gray-300 disabled:opacity-50"
+      >
+        Previous
+      </button>
+
+      <button
+      *ngFor="let page of [].constructor(totalPages); let i = index"
+      (click)="changePage(i + 1)"
+      [class.bg-blue-500]="currentPage === i + 1"
+      [class.font-bold]="currentPage === i + 1"
+      [class.border-blue-500]="currentPage === i + 1"
+      [class.shadow-lg]="currentPage === i + 1"
+      [class.text-blue-500]="currentPage === i + 1"
+      class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-200"
+    >
+      {{ i + 1 }}
+    </button>
+
+
+      <button
+        (click)="changePage(currentPage + 1)"
+        [disabled]="currentPage === totalPages"
+        class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 border border-gray-300 rounded-lg hover:bg-gray-300 disabled:opacity-50"
+      >
+        Next
+      </button>
+    </div>
+
+
+    <div>
+      <select
+        (change)="updateItemsPerPage($any($event.target).value)"
+        class="px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        <option value="5">5 items</option>
+        <option value="10">10 items</option>
+        <option value="20">20 items</option>
+      </select>
+    </div>
+  </div>
+</div>

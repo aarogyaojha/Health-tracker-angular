@@ -7,6 +7,7 @@ import { WorkoutFormComponent } from './components/workout-form/workout-form.com
 import { WorkoutChartComponent } from './components/workout-chart/workout-chart.component';
 import { UserWorkoutComponent } from './components/user-workout/user-workout.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { ReactiveFormsModule } from '@angular/forms';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgApexchartsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
