@@ -1,1 +1,52 @@
-<p>workout-form works!</p>
+<div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+  <form [formGroup]="workoutForm" (ngSubmit)="onSubmit()">
+    <!-- User Name -->
+    <div class="mb-4">
+      <label class="block text-gray-600 text-sm font-medium mb-1">User Name*</label>
+      <input
+        type="text"
+        formControlName="userName"
+        class="w-full p-3 border rounded-lg bg-gray-200 text-lg"
+        placeholder="Enter your name"
+      />
+    </div>
+
+    <!-- Workout Type & Minutes -->
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block text-gray-600 text-sm font-medium mb-1">Workout Type*</label>
+        <select formControlName="workoutType" class="w-full p-3 border rounded-lg bg-gray-200 text-lg">
+          <option *ngFor="let type of workoutTypes" [value]="type">{{ type }}</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-gray-600 text-sm font-medium mb-1">Workout Minutes*</label>
+        <input
+          type="number"
+          formControlName="workoutMinutes"
+          class="w-full p-3 border rounded-lg bg-gray-200 text-lg"
+          placeholder="Minutes"
+        />
+      </div>
+    </div>
+
+    <!-- Add Workout Button -->
+    <div class="mt-6 text-left">
+      <button
+        type="submit"
+        class="bg-white text-blue-600 font-semibold py-2 px-4 rounded-full shadow-md border hover:bg-gray-100 transition"
+      >
+        Add Workout
+      </button>
+    </div>
+  </form>
+
+  <!-- Error Message (Only show if form is invalid after submission) -->
+  <div *ngIf="formSubmitted && workoutForm.invalid" class="mt-4 text-red-500 text-sm">
+    <p *ngIf="workoutForm.controls['userName'].hasError('required')">User Name is required.</p>
+    <p *ngIf="workoutForm.controls['workoutType'].hasError('required')">Workout Type is required.</p>
+    <p *ngIf="workoutForm.controls['workoutMinutes'].hasError('required')">Workout Minutes are required.</p>
+    <p *ngIf="workoutForm.controls['workoutMinutes'].hasError('min')">Workout Minutes must be at least 1 minute.</p>
+  </div>
+</div>
